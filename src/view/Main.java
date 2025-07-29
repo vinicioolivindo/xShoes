@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import model.Cliente;
+import model.Produto;
 import service.ClienteService;
 import service.PedidoService;
 import service.ProdutoService;
@@ -23,10 +24,35 @@ public class Main {
             opcao = sc.nextInt();
             switch (opcao) {
                 case 1:
-                    // solicitar dados e chamar produtoService
-                    break;
+                     sc.nextLine(); // limpar buffer
+                     System.out.println("Nome do produto:");
+                     String nomeProd = sc.nextLine();
+
+                    System.out.println("Descrição:");
+                    String descricao = sc.nextLine();
+
+                    System.out.println("Preço:");
+                    double preco = sc.nextDouble();
+
+                    System.out.println("Estoque:");
+                    int estoque = sc.nextInt();
+
+                    Produto novoProduto = new Produto(nomeProd, descricao, preco, estoque);
+                    if (produtoService.inserirProduto(novoProduto)) {
+                    System.out.println("Produto cadastrado com sucesso!");
+                } else {
+                    System.out.println("Erro ao cadastrar produto.");
+                }
+                break;
+                    
                 case 2:
-                    // produtoService.listar()
+                     List<Produto> produtos = produtoService.listarProdutos();
+                    System.out.println("\nLista de Produtos:");
+                    if (produtos.isEmpty()) {
+                        System.out.println("Nenhum produto cadastrado.");
+                    } else {
+                        produtos.forEach(System.out::println);
+                    }
                     break;
                 case 3:
                     System.out.println("Nome:");

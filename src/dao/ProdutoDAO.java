@@ -1,5 +1,130 @@
 package dao;
 
+import model.Produto;
+import util.ConexaoDB;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProdutoDAO {
 
+    private Connection conn;
+
+    public ProdutoDAO() {
+        this.conn = ConexaoDB.getConnection();
+    }
+
+    public void inserir(Produto produto) {
+        String sql = "INSERT INTO Produto (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, produto.getNome());
+            stmt.setString(2, produto.getDescricao());
+            stmt.setDouble(3, produto.getPreco());
+            stmt.setInt(4, produto.getEstoque());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Produto> listarTodos() {
+        List<Produto> produtos = new ArrayList<>();
+        String sql = "SELECT * FROM Produto";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Produto produto = new Produto(
+                    rs.getInt("id"),
+                    rs.getString("nome"),
+                    rs.getString("descricao"),
+                    rs.getDouble("preco"),
+                    rs.getInt("estoque")
+                );
+                produtos.add(produto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return produtos;
+    }
+
+    public void atualizar(Produto produto) {
+        String sql = "UPDATE Produto SET nome = ?, descricao = ?, preco = ?, estoque = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, produto.getNome());
+            stmt.setString(2, produto.getDescricao());
+            stmt.setDouble(3, produto.getPreco());
+            stmt.setInt(4, produto.getEstoque());
+            stmt.setInt(5, produto.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void remover(int id) {
+        String sql = "DELETE FROM Produto WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Produto> buscarPorNome(String nome) {
+        List<Produto> produtos = new ArrayList<>();
+        String sql = "SELECT * FROM Produto WHERE nome LIKE ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nome + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Produto produto = new Produto(
+                    rs.getInt("id"),
+                    rs.getString("nome"),
+                    rs.getString("descricao"),
+                    rs.getDouble("preco"),
+                    rs.getInt("estoque")
+                );
+                produtos.add(produto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return produtos;
+    }
+
+    public List<Produto> buscarPorFaixaDePreco(double precoMin, double precoMax) {
+        List<Produto> produtos = new ArrayList<>();
+        String sql = "SELECT * FROM Produto WHERE preco BETWEEN ? AND ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDouble(1, precoMin);
+            stmt.setDouble(2, precoMax);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Produto produto = new Produto(
+                    rs.getInt("id"),
+                    rs.getString("nome"),
+                    rs.getString("descricao"),
+                    rs.getDouble("preco"),
+                    rs.getInt("estoque")
+                );
+                produtos.add(produto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return produtos;
+    }
 }
