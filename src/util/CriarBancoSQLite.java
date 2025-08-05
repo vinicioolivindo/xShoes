@@ -14,7 +14,7 @@ public class CriarBancoSQLite {
 
     public void criarTabelaProduto() {
         String sql = "CREATE TABLE IF NOT EXISTS tbProduto ("
-                + "id INTEGER PRIMARY KEY,"
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "nome TEXT NOT NULL,"
                 + "descricao TEXT NOT NULL,"
                 + "preco DOUBLE NOT NULL,"
@@ -36,7 +36,7 @@ public class CriarBancoSQLite {
 
     public void criarTabelaCliente() {
         String sql = "CREATE TABLE IF NOT EXISTS tbCliente ("
-                + "id INTEGER PRIMARY KEY,"
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "nome TEXT NOT NULL,"
                 + "email TEXT NOT NULL,"
                 + "endereco TEXT NOT NULL,"
