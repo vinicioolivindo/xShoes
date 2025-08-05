@@ -56,7 +56,7 @@ public class Main {
                 System.out.println("Descrição:");
                 String descricao = sc.nextLine();
 
-                System.out.println("Preço (use ponto ou vírgula):");
+                System.out.println("Preço:");
                 String precoStr = sc.nextLine().replace(",", ".");
                 double preco;
                 try {
