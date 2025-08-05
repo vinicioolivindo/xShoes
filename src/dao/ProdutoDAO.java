@@ -1,5 +1,6 @@
 package dao;
 
+import model.Cliente;
 import model.Produto;
 import java.sql.*;
 import java.util.ArrayList;
@@ -126,7 +127,25 @@ public class ProdutoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return produtos;
+    }
+    public Produto buscarPorId(int id) {
+        String sql = "SELECT * FROM tbProduto WHERE id=?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Produto p = new Produto();
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setDescricao(rs.getString("descricao"));
+                p.setPreco(rs.getDouble("preco"));
+                p.setEstoque(rs.getInt("estoque"));
+                return p;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }

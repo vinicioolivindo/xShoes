@@ -1,6 +1,7 @@
 package service;
 
 import dao.ProdutoDAO;
+import model.Cliente;
 import model.Produto;
 import java.sql.*;
 import java.util.List;
@@ -69,5 +70,9 @@ public class ProdutoService {
             return false;
         }
         return true;
+    }
+
+    public Produto buscarProduto(int id) {
+        return produtoDAO.buscarPorId(id);
     }
 }

@@ -55,7 +55,7 @@ public class CriarBancoSQLite {
             System.err.println("Erro ao criar tabela 'tbCliente': " + e.getMessage());
         }
     }
-}
+
 
 public void criarTabelaPedido() {
     String sql = "CREATE TABLE IF NOT EXISTS tbPedido ("

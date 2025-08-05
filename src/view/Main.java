@@ -43,50 +43,50 @@ public class Main {
         int opcao;
         do {
             System.out.println(
-                    "\n1. Cadastrar produto\n2. Listar produtos\n3. Cadastrar cliente\n4. Listar clientes\n5. Atualizar cliente\n6. Remover cliente\n0. Sair");
+                    "\n1. Cadastrar produto\n2. Listar produtos\n3. Cadastrar cliente\n4. Listar clientes\n5. Atualizar cliente\n6. Remover cliente\n7.Atualizar Produto\n8.Remover Produto\n0. Sair");
             System.out.print("Opção: ");
             opcao = sc.nextInt();
             sc.nextLine(); // limpar buffer do nextInt
 
             switch (opcao) {
-            case 1:
-                System.out.println("Nome do produto:");
-                String nomeProd = sc.nextLine();
+                case 1:
+                    System.out.println("Nome do produto:");
+                    String nomeProd = sc.nextLine();
 
-                System.out.println("Descrição:");
-                String descricao = sc.nextLine();
+                    System.out.println("Descrição:");
+                    String descricao = sc.nextLine();
 
-                System.out.println("Preço:");
-                String precoStr = sc.nextLine().replace(",", ".");
-                double preco;
-                try {
-                    preco = Double.parseDouble(precoStr);
-                } catch (NumberFormatException e) {
-                    System.out.println("Preço inválido.");
+                    System.out.println("Preço:");
+                    String precoStr = sc.nextLine().replace(",", ".");
+                    double preco;
+                    try {
+                        preco = Double.parseDouble(precoStr);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Preço inválido.");
+                        break;
+                    }
+
+                    System.out.println("Estoque:");
+                    int estoque = sc.nextInt();
+                    sc.nextLine(); // limpar buffer
+
+                    Produto novoProduto = new Produto(nomeProd, descricao, preco, estoque);
+                    if (produtoService.inserirProduto(novoProduto)) {
+                        System.out.println("Produto cadastrado com sucesso!");
+                    } else {
+                        System.out.println("Erro ao cadastrar produto.");
+                    }
                     break;
-                }
-
-                System.out.println("Estoque:");
-                int estoque = sc.nextInt();
-                sc.nextLine(); // limpar buffer
-
-                Produto novoProduto = new Produto(nomeProd, descricao, preco, estoque);
-                if (produtoService.inserirProduto(novoProduto)) {
-                    System.out.println("Produto cadastrado com sucesso!");
-                } else {
-                    System.out.println("Erro ao cadastrar produto.");
-                }
-                break;
 
                 case 2:
-                     List<Produto> produtos = produtoService.listarProdutos();
-                     System.out.println("\nLista de Produtos:");
-                     if (produtos.isEmpty()) {
-                         System.out.println("Nenhum produto cadastrado.");
-                     } else {
-                         produtos.forEach(System.out::println);
-                     }
-                     break;
+                    List<Produto> produtos = produtoService.listarProdutos();
+                    System.out.println("\nLista de Produtos:");
+                    if (produtos.isEmpty()) {
+                        System.out.println("Nenhum produto cadastrado.");
+                    } else {
+                        produtos.forEach(System.out::println);
+                    }
+                    break;
 
                 case 3:
                     System.out.println("Nome:");
@@ -140,6 +140,52 @@ public class Main {
                     sc.nextLine();
                     clienteService.removerCliente(idDelete);
                     System.out.println("Cliente removido.");
+                    break;
+
+                case 7:
+                    System.out.println("ID do produto a atualizar:");
+                    int idProdUpdate = sc.nextInt();
+                    sc.nextLine(); // limpar buffer
+                    Produto prodExistente = produtoService.buscarProduto(idProdUpdate);
+                    if (prodExistente == null) {
+                        System.out.println("Produto não encontrado!");
+                    } else {
+                        System.out.println("Novo nome:");
+                        prodExistente.setNome(sc.nextLine());
+
+                        System.out.println("Nova descrição:");
+                        prodExistente.setDescricao(sc.nextLine());
+
+                        System.out.println("Novo preço:");
+                        String novoPrecoStr = sc.nextLine().replace(",", ".");
+                        try {
+                            prodExistente.setPreco(Double.parseDouble(novoPrecoStr));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Preço inválido.");
+                            break;
+                        }
+
+                        System.out.println("Novo estoque:");
+                        try {
+                            prodExistente.setEstoque(sc.nextInt());
+                            sc.nextLine();
+                        } catch (Exception e) {
+                            System.out.println("Estoque inválido.");
+                            sc.nextLine(); // limpar buffer
+                            break;
+                        }
+
+                        produtoService.atualizarProduto(prodExistente);
+                        System.out.println("Produto atualizado!");
+                    }
+                    break;
+
+                case 8:
+                    System.out.println("ID do produto a remover:");
+                    int idProdDelete = sc.nextInt();
+                    sc.nextLine();
+                    produtoService.removerProduto(idProdDelete);
+                    System.out.println("Produto removido.");
                     break;
 
                 case 0:
