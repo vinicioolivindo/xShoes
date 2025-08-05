@@ -33,11 +33,11 @@ public class Main {
 
         // 3. Instanciar DAOs com conexão
         ClienteDAO clienteDAO = new ClienteDAO(conexaoSQLite.getConexao());
-        //ProdutoDAO produtoDAO = new ProdutoDAO(conexaoSQLite.getConexao());
+        ProdutoDAO produtoDAO = new ProdutoDAO(conexaoSQLite.getConexao());
 
         // 4. Injetar os DAOs nos Services
         ClienteService clienteService = new ClienteService(clienteDAO);
-        //ProdutoService produtoService = new ProdutoService(produtoDAO);
+        ProdutoService produtoService = new ProdutoService(produtoDAO);
         PedidoService pedidoService = new PedidoService(); // ainda não implementado
 
         int opcao;
@@ -49,37 +49,44 @@ public class Main {
             sc.nextLine(); // limpar buffer do nextInt
 
             switch (opcao) {
-                case 1:
-                    System.out.println("Nome do produto:");
-                    String nomeProd = sc.nextLine();
+            case 1:
+                System.out.println("Nome do produto:");
+                String nomeProd = sc.nextLine();
 
-                    System.out.println("Descrição:");
-                    String descricao = sc.nextLine();
+                System.out.println("Descrição:");
+                String descricao = sc.nextLine();
 
-                    System.out.println("Preço:");
-                    double preco = sc.nextDouble();
+                System.out.println("Preço (use ponto ou vírgula):");
+                String precoStr = sc.nextLine().replace(",", ".");
+                double preco;
+                try {
+                    preco = Double.parseDouble(precoStr);
+                } catch (NumberFormatException e) {
+                    System.out.println("Preço inválido.");
+                    break;
+                }
 
-                    System.out.println("Estoque:");
-                    int estoque = sc.nextInt();
-                    sc.nextLine(); // limpar buffer
+                System.out.println("Estoque:");
+                int estoque = sc.nextInt();
+                sc.nextLine(); // limpar buffer
 
-                    // Produto novoProduto = new Produto(nomeProd, descricao, preco, estoque);
-                    // if (produtoService.inserirProduto(novoProduto)) {
-                    //     System.out.println("Produto cadastrado com sucesso!");
-                    // } else {
-                    //     System.out.println("Erro ao cadastrar produto.");
-                    // }
-                    // break;
+                Produto novoProduto = new Produto(nomeProd, descricao, preco, estoque);
+                if (produtoService.inserirProduto(novoProduto)) {
+                    System.out.println("Produto cadastrado com sucesso!");
+                } else {
+                    System.out.println("Erro ao cadastrar produto.");
+                }
+                break;
 
                 case 2:
-                    // List<Produto> produtos = produtoService.listarProdutos();
-                    // System.out.println("\nLista de Produtos:");
-                    // if (produtos.isEmpty()) {
-                    //     System.out.println("Nenhum produto cadastrado.");
-                    // } else {
-                    //     produtos.forEach(System.out::println);
-                    // }
-                    // break;
+                     List<Produto> produtos = produtoService.listarProdutos();
+                     System.out.println("\nLista de Produtos:");
+                     if (produtos.isEmpty()) {
+                         System.out.println("Nenhum produto cadastrado.");
+                     } else {
+                         produtos.forEach(System.out::println);
+                     }
+                     break;
 
                 case 3:
                     System.out.println("Nome:");

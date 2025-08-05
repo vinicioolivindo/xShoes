@@ -2,7 +2,7 @@ package service;
 
 import dao.ProdutoDAO;
 import model.Produto;
-
+import java.sql.*;
 import java.util.List;
 
 public class ProdutoService {
@@ -10,7 +10,7 @@ public class ProdutoService {
     private ProdutoDAO produtoDAO;
 
     public ProdutoService(ProdutoDAO produtoDAO2) {
-        this.produtoDAO = new ProdutoDAO();
+        this.produtoDAO = produtoDAO2;
     }
 
     public boolean inserirProduto(Produto produto) {

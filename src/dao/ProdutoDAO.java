@@ -9,12 +9,16 @@ public class ProdutoDAO {
 
     private Connection conn;
 
+    public ProdutoDAO(Connection conn) {
+        this.conn = conn;
+    }
+
     public ProdutoDAO() {
-        //this.conn = ConexaoDB.getConnection();
+        //TODO Auto-generated constructor stub
     }
 
     public void inserir(Produto produto) {
-        String sql = "INSERT INTO Produto (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO tbProduto (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, produto.getNome());
             stmt.setString(2, produto.getDescricao());
@@ -28,7 +32,7 @@ public class ProdutoDAO {
 
     public List<Produto> listarTodos() {
         List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT * FROM Produto";
+        String sql = "SELECT * FROM tbProduto";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -51,7 +55,7 @@ public class ProdutoDAO {
     }
 
     public void atualizar(Produto produto) {
-        String sql = "UPDATE Produto SET nome = ?, descricao = ?, preco = ?, estoque = ? WHERE id = ?";
+        String sql = "UPDATE tbProduto SET nome = ?, descricao = ?, preco = ?, estoque = ? WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, produto.getNome());
@@ -66,7 +70,7 @@ public class ProdutoDAO {
     }
 
     public void remover(int id) {
-        String sql = "DELETE FROM Produto WHERE id = ?";
+        String sql = "DELETE FROM tbProduto WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -77,7 +81,7 @@ public class ProdutoDAO {
 
     public List<Produto> buscarPorNome(String nome) {
         List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT * FROM Produto WHERE nome LIKE ?";
+        String sql = "SELECT * FROM tbProduto WHERE nome LIKE ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + nome + "%");
@@ -102,7 +106,7 @@ public class ProdutoDAO {
 
     public List<Produto> buscarPorFaixaDePreco(double precoMin, double precoMax) {
         List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT * FROM Produto WHERE preco BETWEEN ? AND ?";
+        String sql = "SELECT * FROM tbProduto WHERE preco BETWEEN ? AND ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDouble(1, precoMin);
