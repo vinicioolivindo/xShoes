@@ -9,7 +9,7 @@ public class ProdutoService {
 
     private ProdutoDAO produtoDAO;
 
-    public ProdutoService() {
+    public ProdutoService(ProdutoDAO produtoDAO2) {
         this.produtoDAO = new ProdutoDAO();
     }
 

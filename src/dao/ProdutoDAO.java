@@ -1,8 +1,6 @@
 package dao;
 
 import model.Produto;
-import util.ConexaoDB;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +10,7 @@ public class ProdutoDAO {
     private Connection conn;
 
     public ProdutoDAO() {
-        this.conn = ConexaoDB.getConnection();
+        //this.conn = ConexaoDB.getConnection();
     }
 
     public void inserir(Produto produto) {

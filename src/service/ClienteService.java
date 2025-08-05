@@ -6,7 +6,11 @@ import model.Cliente;
 import java.util.List;
 
 public class ClienteService {
-    private ClienteDAO dao = new ClienteDAO();
+    private ClienteDAO dao;
+
+    public ClienteService(ClienteDAO dao) {
+        this.dao = dao;
+    }
 
     public void cadastrarCliente(Cliente cliente) {
         if (cliente.getNome() == null || cliente.getEmail() == null || cliente.getEndereco() == null) {

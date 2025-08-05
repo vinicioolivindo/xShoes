@@ -1,4 +1,4 @@
-package conexoes;
+package util.conexoes;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

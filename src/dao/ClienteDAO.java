@@ -1,8 +1,6 @@
 package dao;
 
 import model.Cliente;
-import util.ConexaoDB;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +8,12 @@ import java.util.List;
 public class ClienteDAO {
     private Connection conn;
 
-    public ClienteDAO() {
-        conn = ConexaoDB.getConnection();
+    public ClienteDAO(Connection conn) {
+        this.conn = conn;
     }
-
+    
     public void inserir(Cliente cliente) {
-        String sql = "INSERT INTO Cliente (nome, email, endereco, telefone) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO tbCliente (nome, email, endereco, telefone) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEmail());
@@ -29,7 +27,7 @@ public class ClienteDAO {
 
     public List<Cliente> listarTodos() {
         List<Cliente> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Cliente";
+        String sql = "SELECT * FROM tbCliente";
         try (Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -48,7 +46,7 @@ public class ClienteDAO {
     }
 
     public void atualizar(Cliente cliente) {
-        String sql = "UPDATE Cliente SET nome=?, email=?, endereco=?, telefone=? WHERE id=?";
+        String sql = "UPDATE tbCliente SET nome=?, email=?, endereco=?, telefone=? WHERE id=?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEmail());
@@ -62,7 +60,7 @@ public class ClienteDAO {
     }
 
     public void remover(int id) {
-        String sql = "DELETE FROM Cliente WHERE id=?";
+        String sql = "DELETE FROM tbCliente WHERE id=?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -72,7 +70,7 @@ public class ClienteDAO {
     }
 
     public Cliente buscarPorId(int id) {
-        String sql = "SELECT * FROM Cliente WHERE id=?";
+        String sql = "SELECT * FROM tbCliente WHERE id=?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();

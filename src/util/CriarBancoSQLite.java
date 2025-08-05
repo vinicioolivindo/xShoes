@@ -1,80 +1,58 @@
-
 package util;
 
-import conexoes.ConexaoSQLite;
 import java.sql.SQLException;
 import java.sql.Statement;
+import util.conexoes.ConexaoSQLite;
 
 public class CriarBancoSQLite {
-    
+
     private final ConexaoSQLite conexaoSQLite;
-    
+
     public CriarBancoSQLite(ConexaoSQLite pConexaoSQLite) {
         this.conexaoSQLite = pConexaoSQLite;
     }
-    
-    public void criarTabelaProduto(){
-        String sql = "CREATE TABLE IF NOT EXISTS tbProduto"
-                + "("
-                + "id interger primary key,"
-                +"nome text NOT NULL,"
-                +"descricao text NOT NULL,"
-                + "preco double NOT NULL,"
-                + "estoque interger NOT NULL"
-                +");";
-        
-        //executar o sql de criar tabelas
-        
-        boolean conectou = false;
-        
-        try{
-            conectou = this.conexaoSQLite.conectar();
-            
+
+    public void criarTabelaProduto() {
+        String sql = "CREATE TABLE IF NOT EXISTS tbProduto ("
+                + "id INTEGER PRIMARY KEY,"
+                + "nome TEXT NOT NULL,"
+                + "descricao TEXT NOT NULL,"
+                + "preco DOUBLE NOT NULL,"
+                + "estoque INTEGER NOT NULL"
+                + ");";
+
+        try {
             Statement stmt = this.conexaoSQLite.criarStatement();
-            
-            stmt.execute(sql);
-            
-            System.out.println("Tabela produto criada");
-            
-        }catch(SQLException e){
-            //mensagem de erro na criação da tabela
-        } finally {
-            if(conectou) {
-                this.conexaoSQLite.desconectar();
-             }
+            if (stmt != null) {
+                stmt.execute(sql);
+                System.out.println("Tabela 'tbProduto' criada com sucesso.");
+            } else {
+                System.err.println("Erro ao criar Statement para 'tbProduto'.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao criar tabela 'tbProduto': " + e.getMessage());
         }
     }
 
-    
-    public void criarTabelaCliente(){
-        String sql = "CREATE TABLE IF NOT EXISTS tbCliente"
-                + "("
-                + "id interger primary key,"
-                +"nome text NOT NULL,"
-                +"email text NOT NULL,"
-                + "endereco text NOT NULL,"
-                + "telefone text NOT NULL"
-                +");";
-        
-        //executar o sql de criar tabelas
-        
-        boolean conectou = false;
-        
-        try{
-            conectou = this.conexaoSQLite.conectar();
-            
+    public void criarTabelaCliente() {
+        String sql = "CREATE TABLE IF NOT EXISTS tbCliente ("
+                + "id INTEGER PRIMARY KEY,"
+                + "nome TEXT NOT NULL,"
+                + "email TEXT NOT NULL,"
+                + "endereco TEXT NOT NULL,"
+                + "telefone TEXT NOT NULL"
+                + ");";
+
+        try {
             Statement stmt = this.conexaoSQLite.criarStatement();
-            
-            stmt.execute(sql);
-            
-            System.out.println("Tabela cliente criada");
-            
-        }catch(SQLException e){
-            //mensagem de erro na criação da tabela
-        } finally {
-            if(conectou) {
-                this.conexaoSQLite.desconectar();
-             }
+            if (stmt != null) {
+                stmt.execute(sql);
+                System.out.println("Tabela 'tbCliente' criada com sucesso.");
+            } else {
+                System.err.println("Erro ao criar Statement para 'tbCliente'.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao criar tabela 'tbCliente': " + e.getMessage());
         }
     }
 }

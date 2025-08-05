@@ -2,15 +2,13 @@ package dao;
 
 import model.Pedido;
 import model.Produto;
-import util.ConexaoDB;
-
 import java.sql.*;
 import java.util.List;
 
 public class PedidoDAO {
 private Connection conn;
 public PedidoDAO() {
-    this.conn = ConexaoDB.getConnection();
+    //this.conn = ConexaoDB.getConnection();
 }
 
 public void inserir(Pedido pedido) {
