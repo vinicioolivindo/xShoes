@@ -56,3 +56,59 @@ public class CriarBancoSQLite {
         }
     }
 }
+
+public void criarTabelaPedido() {
+    String sql = "CREATE TABLE IF NOT EXISTS tbPedido ("
+            + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + "idCliente INTEGER NOT NULL, "
+            + "dataPedido TEXT NOT NULL, "
+            + "valorTotal DOUBLE NOT NULL, "
+            + "FOREIGN KEY(idCliente) REFERENCES tbCliente(id)"
+            + ");";
+
+    boolean conectou = false;
+
+    try {
+        conectou = this.conexaoSQLite.conectar();
+        
+        Statement stmt = this.conexaoSQLite.criarStatement();
+        
+       stmt.execute(sql);
+        
+        System.out.println("Tabela pedido criada");
+    } catch (SQLException e) {
+        System.out.println("Erro ao criar tabela pedido: " + e.getMessage());
+    } finally {
+        if (conectou) {
+            this.conexaoSQLite.desconectar();
+        }
+    }
+}
+
+public void criarTabelaPedidoProduto() {
+    String sql = "CREATE TABLE IF NOT EXISTS tbPedidoProduto ("
+            + "idPedido INTEGER NOT NULL AUTOINCREMENT, "
+            + "idProduto INTEGER NOT NULL, "
+            + "quantidade INTEGER NOT NULL, "
+            + "precoUnitario DOUBLE NOT NULL, "
+            + "PRIMARY KEY(idPedido, idProduto), "
+            + "FOREIGN KEY(idPedido) REFERENCES tbPedido(id), "
+            + "FOREIGN KEY(idProduto) REFERENCES tbProduto(id)"
+            + ");";
+
+    boolean conectou = false;
+
+    try {
+        conectou = this.conexaoSQLite.conectar();
+        Statement stmt = this.conexaoSQLite.criarStatement();
+        stmt.execute(sql);
+        System.out.println("Tabela pedido_produto criada");
+    } catch (SQLException e) {
+        System.out.println("Erro ao criar tabela pedido_produto: " + e.getMessage());
+    } finally {
+        if (conectou) {
+            this.conexaoSQLite.desconectar();
+            }
+        }
+    }
+}
