@@ -8,22 +8,27 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class PedidoService {
-private PedidoDAO pedidoDAO;
-public PedidoService() {
-    this.pedidoDAO = new PedidoDAO();
-}
+    private PedidoDAO pedidoDAO;
 
-public void criarPedido(int idCliente, List<Produto> produtos) {
-    double total = calcularTotal(produtos);
-    Pedido pedido = new Pedido(idCliente, LocalDate.now(), total, produtos);
-    pedidoDAO.inserir(pedido);
-}
-
-private double calcularTotal(List<Produto> produtos) {
-    double total = 0;
-    for (Produto p : produtos) {
-        total += p.getPreco();
+    public PedidoService(PedidoDAO PedidoDAO2) {
+        this.pedidoDAO = PedidoDAO2;
     }
-    return total;
-}
+
+    public void criarPedido(int idCliente, List<Produto> produtos) {
+        double valorTotal = calcularValorTotal(produtos);
+        Pedido pedido = new Pedido(idCliente, LocalDate.now(), valorTotal, produtos);
+        pedidoDAO.inserir(pedido);
+    }
+
+    public List<Pedido> listarPedidos() {
+        return pedidoDAO.listarTodos();
+    }
+
+    private double calcularValorTotal(List<Produto> produtos) {
+        double total = 0.0;
+        for (Produto produto : produtos) {
+            total += produto.getPreco();
+        }
+        return total;
+    }
 }

@@ -58,4 +58,16 @@ public List<Produto> getProdutos() {
 public void setProdutos(List<Produto> produtos) {
     this.produtos = produtos;
 }
+
+@Override
+    public String toString() {
+        return "Pedido [id=" + id + 
+               ", idCliente=" + idCliente + 
+               ", dataPedido=" + dataPedido + 
+               ", valorTotal=" + valorTotal + 
+               ", produtos=" + produtos + "]";
+    }
+
 }
+
+

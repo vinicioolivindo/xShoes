@@ -61,7 +61,7 @@ public void criarTabelaPedido() {
     String sql = "CREATE TABLE IF NOT EXISTS tbPedido ("
             + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "idCliente INTEGER NOT NULL, "
-            + "dataPedido TEXT NOT NULL, "
+            + "dataPedido DATE NOT NULL, "
             + "valorTotal DOUBLE NOT NULL, "
             + "FOREIGN KEY(idCliente) REFERENCES tbCliente(id)"
             + ");";
@@ -87,10 +87,9 @@ public void criarTabelaPedido() {
 
 public void criarTabelaPedidoProduto() {
     String sql = "CREATE TABLE IF NOT EXISTS tbPedidoProduto ("
-            + "idPedido INTEGER NOT NULL AUTOINCREMENT, "
+            + "idPedido INTEGER NOT NULL, "
             + "idProduto INTEGER NOT NULL, "
             + "quantidade INTEGER NOT NULL, "
-            + "precoUnitario DOUBLE NOT NULL, "
             + "PRIMARY KEY(idPedido, idProduto), "
             + "FOREIGN KEY(idPedido) REFERENCES tbPedido(id), "
             + "FOREIGN KEY(idProduto) REFERENCES tbProduto(id)"

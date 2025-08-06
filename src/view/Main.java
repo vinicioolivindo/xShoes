@@ -1,11 +1,14 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import dao.ClienteDAO;
+import dao.PedidoDAO;
 import dao.ProdutoDAO;
 import model.Cliente;
+import model.Pedido;
 import model.Produto;
 import service.ClienteService;
 import service.PedidoService;
@@ -30,20 +33,23 @@ public class Main {
         CriarBancoSQLite criador = new CriarBancoSQLite(conexaoSQLite);
         criador.criarTabelaCliente();
         criador.criarTabelaProduto();
+        criador.criarTabelaPedido();
+        criador.criarTabelaPedidoProduto();
 
         // 3. Instanciar DAOs com conexão
         ClienteDAO clienteDAO = new ClienteDAO(conexaoSQLite.getConexao());
         ProdutoDAO produtoDAO = new ProdutoDAO(conexaoSQLite.getConexao());
+        PedidoDAO  pedidoDAO  = new PedidoDAO(conexaoSQLite.getConexao());
 
         // 4. Injetar os DAOs nos Services
         ClienteService clienteService = new ClienteService(clienteDAO);
         ProdutoService produtoService = new ProdutoService(produtoDAO);
-        PedidoService pedidoService = new PedidoService(); // ainda não implementado
+        PedidoService pedidoService = new PedidoService(pedidoDAO); 
 
         int opcao;
         do {
             System.out.println(
-                    "\n1. Cadastrar produto\n2. Listar produtos\n3. Cadastrar cliente\n4. Listar clientes\n5. Atualizar cliente\n6. Remover cliente\n7.Atualizar Produto\n8.Remover Produto\n9.Busca por nome\n10.Busca por preço\n0. Sair");
+                "\n1. Cadastrar produto\n2. Listar produtos\n3. Cadastrar cliente\n4. Listar clientes\n5. Atualizar cliente\n6. Remover cliente\n7. Atualizar Produto\n8. Remover Produto\n9. Busca por nome\n10. Busca por preço\n11. Criar Pedido\n12. Listar Pedidos\n0. Sair");
             System.out.print("Opção: ");
             opcao = sc.nextInt();
             sc.nextLine(); // limpar buffer do nextInt
@@ -187,6 +193,7 @@ public class Main {
                     produtoService.removerProduto(idProdDelete);
                     System.out.println("Produto removido.");
                     break;
+
                 case 9:
                     System.out.print("Digite o nome do produto para buscar: ");
                     String nomeBusca = sc.nextLine();
@@ -217,16 +224,63 @@ public class Main {
                     }
                     break;
 
+                case 11:
+                    System.out.print("ID do cliente: ");
+                    int idClientePedido = sc.nextInt();
+                    sc.nextLine();
+
+                    Cliente clientePedido = clienteService.buscarCliente(idClientePedido);
+                    if (clientePedido == null) {
+                        System.out.println("Cliente não encontrado!");
+                        break;
+                    }
+
+                    List<Produto> produtosPedido = new ArrayList<>();
+                    while (true) {
+                        System.out.print("Digite o ID do produto para adicionar (ou 0 para finalizar): ");
+                        int idProduto = sc.nextInt();
+                        sc.nextLine();
+
+                        if (idProduto == 0) break;
+
+                        Produto produto = produtoService.buscarProduto(idProduto);
+                        if (produto == null) {
+                            System.out.println("Produto não encontrado.");
+                        } else {
+                            produtosPedido.add(produto);
+                            System.out.println("Produto adicionado.");
+                        }
+                    }
+
+                    if (produtosPedido.isEmpty()) {
+                        System.out.println("Nenhum produto adicionado. Pedido cancelado.");
+                    } else {
+                        pedidoService.criarPedido(idClientePedido, produtosPedido);
+                        System.out.println("Pedido criado com sucesso!");
+                    }
+                    break;
+
+                case 12:
+                    List<Pedido> pedidos = pedidoService.listarPedidos();
+                    if (pedidos.isEmpty()) {
+                        System.out.println("Nenhum pedido encontrado.");
+                    } else {
+                        System.out.println("Pedidos Realizados:");
+                        for (Pedido pedido : pedidos) {
+                            System.out.println(pedido);
+                        }
+                    }
+                    break;
+
                 case 0:
                     System.out.println("Saindo...");
+                    conexaoSQLite.desconectar(); // ← Fecha a conexão aqui!
+                    sc.close(); // ← Fecha o scanner aqui!
                     break;
 
                 default:
                     System.out.println("Opção inválida.");
             }
         } while (opcao != 0);
-
-        conexaoSQLite.desconectar();
-        sc.close();
     }
 }
