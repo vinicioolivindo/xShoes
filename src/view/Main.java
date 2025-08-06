@@ -43,7 +43,7 @@ public class Main {
         int opcao;
         do {
             System.out.println(
-                    "\n1. Cadastrar produto\n2. Listar produtos\n3. Cadastrar cliente\n4. Listar clientes\n5. Atualizar cliente\n6. Remover cliente\n7.Atualizar Produto\n8.Remover Produto\n0. Sair");
+                    "\n1. Cadastrar produto\n2. Listar produtos\n3. Cadastrar cliente\n4. Listar clientes\n5. Atualizar cliente\n6. Remover cliente\n7.Atualizar Produto\n8.Remover Produto\n9.Busca por nome\n10.Busca por preço\n0. Sair");
             System.out.print("Opção: ");
             opcao = sc.nextInt();
             sc.nextLine(); // limpar buffer do nextInt
@@ -186,6 +186,35 @@ public class Main {
                     sc.nextLine();
                     produtoService.removerProduto(idProdDelete);
                     System.out.println("Produto removido.");
+                    break;
+                case 9:
+                    System.out.print("Digite o nome do produto para buscar: ");
+                    String nomeBusca = sc.nextLine();
+                    List<Produto> encontradosPorNome = produtoService.buscarPorNome(nomeBusca);
+                    if (encontradosPorNome.isEmpty()) {
+                        System.out.println("Nenhum produto encontrado com esse nome.");
+                    } else {
+                        encontradosPorNome.forEach(System.out::println);
+                    }
+                    break;
+
+                case 10:
+                    try {
+                        System.out.print("Digite o preço mínimo: ");
+                        double precoMin = Double.parseDouble(sc.nextLine().replace(",", "."));
+
+                        System.out.print("Digite o preço máximo: ");
+                        double precoMax = Double.parseDouble(sc.nextLine().replace(",", "."));
+
+                        List<Produto> encontradosPorPreco = produtoService.buscarPorFaixaDePreco(precoMin, precoMax);
+                        if (encontradosPorPreco.isEmpty()) {
+                            System.out.println("Nenhum produto encontrado na faixa de preço.");
+                        } else {
+                            encontradosPorPreco.forEach(System.out::println);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Preço inválido. Tente novamente.");
+                    }
                     break;
 
                 case 0:

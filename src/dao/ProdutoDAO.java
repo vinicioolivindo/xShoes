@@ -14,10 +14,6 @@ public class ProdutoDAO {
         this.conn = conn;
     }
 
-    public ProdutoDAO() {
-        //TODO Auto-generated constructor stub
-    }
-
     public void inserir(Produto produto) {
         String sql = "INSERT INTO tbProduto (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
